@@ -62,28 +62,33 @@ class CGAN:
                        self.epsilon * torch.mean(torch.square(utils.gradient(fusion_img) - utils.gradient(vis_img)))
         return gan_loss + self.lda * content_loss, gan_loss, self.lda * content_loss
 
+
     def train(self):
         if self.config['is_train']:
-            data_dir_ir = os.path.join(self.config['data'], 'Train_ir')
-            data_dir_vi = os.path.join(self.config['data'], 'Train_vi')
+            data_dir_ir = os.path.join(self.config['data'], 'Train_ir')# data/Train_ir
+            data_dir_vi = os.path.join(self.config['data'], 'Train_vi')# data/Train_vi
         else:
-            data_dir_ir = os.path.join(self.config['data'], 'Test_ir')
-            data_dir_vi = os.path.join(self.config['data'], 'Test_ir')
+            data_dir_ir = os.path.join(self.config['data'], 'Test_ir')# data/Test_ir
+            data_dir_vi = os.path.join(self.config['data'], 'Test_vi')# data/Test_vi
+
 
         train_data_ir, train_label_ir = preprocessing.get_images2(data_dir_ir, self.config['image_size'],
                                                                   self.config['label_size'], self.config['stride'])
         train_data_vi, train_label_vi = preprocessing.get_images2(data_dir_vi, self.config['image_size'],
                                                                   self.config['label_size'], self.config['stride'])
         random_index = torch.randperm(len(train_data_ir))
+        print("train_data_ir shape = ",train_data_ir.shape)
+        # print("= = ",len(train_data_ir)) #37710
+        print("len(train_data_ir) = ",len(train_data_ir)) #37710
         train_data_vi = train_data_vi[random_index]
         train_data_ir = train_data_ir[random_index]
         train_label_vi = train_label_vi[random_index]
         train_label_ir = train_label_ir[random_index]
         batch_size = self.config['batch_size']
+        print('get img done')
 
         if self.config['is_train']:
             with SummaryWriter(self.config['summary_dir']) as writer:
-
                 batch_steps = len(train_data_ir) // batch_size
                 epochs = self.config['epoch']
                 for epoch in range(1, 1 + epochs):
@@ -91,6 +96,7 @@ class CGAN:
                     g_loss_mean = 0
                     content_loss_mean = 0
                     for step in range(1, 1 + batch_steps):
+                        print('Training. Epoch:%d/%d Step:%d/%d'%(epoch,epochs,step,batch_steps))
                         start_idx = (step - 1) * batch_size
                         inf_x = train_data_ir[start_idx: start_idx + batch_size].transpose([0, 3, 1, 2])
                         inf_y = train_label_ir[start_idx: start_idx + batch_size].transpose([0, 3, 1, 2])
