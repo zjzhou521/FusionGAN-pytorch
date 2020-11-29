@@ -13,7 +13,7 @@ def main(config):
 
 parser = argparse.ArgumentParser(description='PyTorch Training Example')
 parser.add_argument('--output', default='output', help='folder to output images and model checkpoints')
-parser.add_argument('--data', default='data', help='folder for dataset folder')
+parser.add_argument('--data', default='data/tno_41', help='folder for dataset folder')
 parser.add_argument('--logs', default='logs', help='folder for logs')
 args = parser.parse_args()
 

@@ -1,6 +1,7 @@
 # coding: utf-8
 
 import torch
+import utils
 from torch import nn
 
 
@@ -27,9 +28,9 @@ class G(nn.Module):
             if 'bias' in name:
                 nn.init.zeros_(p)
             elif 'bn' in name:
-                nn.init.trunc_normal_(p, mean=1, std=1e-3)
+                utils._no_grad_trunc_normal_(p, mean=1, std=1e-3)
             else:
-                nn.init.trunc_normal_(p, std=1e-3)
+                utils._no_grad_trunc_normal_(p, std=1e-3)
 
     def forward(self, inf, vis):
         x = torch.cat([vis, inf], dim=1)
@@ -37,7 +38,8 @@ class G(nn.Module):
         x = self.leaky_relu(self.bn2(self.sn_conv2(x)))
         x = self.leaky_relu(self.bn3(self.sn_conv3(x)))
         x = self.leaky_relu(self.bn4(self.sn_conv4(x)))
-        return torch.tanh(self.sn_conv5(x))
+        ret = torch.tanh(self.sn_conv5(x))
+        return ret # [32, 1, 120, 120]
 
 
 class D(nn.Module):
@@ -62,9 +64,9 @@ class D(nn.Module):
             if 'bias' in name:
                 nn.init.zeros_(p)
             elif 'bn' in name:
-                nn.init.trunc_normal_(p, mean=1, std=1e-3)
+                utils._no_grad_trunc_normal_(p, mean=1, std=1e-3)
             else:
-                nn.init.trunc_normal_(p, std=1e-3)
+                utils._no_grad_trunc_normal_(p, std=1e-3)
 
     def forward(self, x):
         x = self.leaky_relu(self.sn_conv1(x))
@@ -72,4 +74,5 @@ class D(nn.Module):
         x = self.leaky_relu(self.bn2(self.sn_conv3(x)))
         x = self.leaky_relu(self.bn3(self.sn_conv4(x)))
         x = x.flatten(start_dim=1)
-        return self.linear(x)
+        ret = self.linear(x)
+        return ret # [32, 1] true or false

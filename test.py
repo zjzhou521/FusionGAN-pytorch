@@ -61,8 +61,7 @@ def test_all(g=None, path=os.path.join(os.getcwd(), 'output', 'result'), data='d
 
     if g is None:
         g = G().to(device)
-        weights = torch.load('output/final_generator.pth')
-        g.load_state_dict(weights)
+        g.load_state_dict(torch.load('output/final_generator.pth'))
 
     if not os.path.exists(path):
         os.makedirs(path)
