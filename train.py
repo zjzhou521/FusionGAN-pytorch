@@ -75,11 +75,11 @@ class CGAN:
 
     def train(self):
         if self.config['is_train']:
-            data_dir_ir = os.path.join(self.config['data'], 'Train_ir')# data/Train_ir
-            data_dir_vi = os.path.join(self.config['data'], 'Train_vi')# data/Train_vi
+            data_dir_ir = 'data/ino_24_17/Train_ir_aug'
+            data_dir_vi = 'data/ino_24_17/Train_vi_aug'
         else:
-            data_dir_ir = os.path.join(self.config['data'], 'Test_ir')# data/Test_ir
-            data_dir_vi = os.path.join(self.config['data'], 'Test_vi')# data/Test_vi
+            data_dir_ir = 'data/ino_24_17/Test_ir'
+            data_dir_vi = 'data/ino_24_17/Test_vi'
 
         # image_size = 132, label_size = 120, stride = 14
         # get all patches and labels  (37710, 132, 132, 1) (37710, 120, 120, 1)

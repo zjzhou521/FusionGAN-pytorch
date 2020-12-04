@@ -47,9 +47,11 @@ def prepare_data(data_path):
     data_path = os.path.join(os.getcwd(), data_path) # get absolute path
     images_path = glob.glob(os.path.join(data_path, "*.bmp"))# get a list of imgs
     images_path.extend(glob.glob(os.path.join(data_path, "*.tif")))
+    if len(images_path)==0:
+        images_path = glob.glob(os.path.join(data_path, "*.jpg"))
     # print(images_path)
     images_path.sort(key=lambda x: int(x[len(data_path) + len(os.path.sep):-4]))# sort by serial
-    # print(images_path)
+    print('images_path len = ',len(images_path))
     return images_path
 
 

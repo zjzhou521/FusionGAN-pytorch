@@ -55,7 +55,7 @@ def imsave(image, path):
     return imageio.imwrite(path, image)
 
 
-def test_all(g=None, path=os.path.join(os.getcwd(), 'output', 'result'), data='data'):
+def test_all(g=None, path=os.path.join(os.getcwd(), 'output', 'result'), data='data/ino_24_17'):
     data_ir = prepare_data2(os.path.join(data, 'Test_ir'))
     data_vi = prepare_data2(os.path.join(data, 'Test_vi'))
 
@@ -67,6 +67,9 @@ def test_all(g=None, path=os.path.join(os.getcwd(), 'output', 'result'), data='d
         os.makedirs(path)
 
     g.eval()
+    sum_EN = 0
+    sum_SD = 0
+    sum_SF = 0
     with torch.no_grad():
         for i in range(len(data_ir)):
             start = time.time()
@@ -85,9 +88,12 @@ def test_all(g=None, path=os.path.join(os.getcwd(), 'output', 'result'), data='d
             end = time.time()
             #
             imsave(result, save_path)
-            # print("Testing [%d] success,Testing time is [%f]" % (i, end - start))
-            pass
-
+            print("Testing [%d] success,Testing time is [%f]" % (i, end - start))
+            # pass
+            sum_EN += EN(result)
+            sum_SD += SD(result)
+            sum_SF += SF(result)
+    print("EN = %.3f, SD = %.3f, SF = %.3f"%(sum_EN/len(data_ir),sum_SD/len(data_ir),sum_SF/len(data_ir)))
 
 if __name__ == '__main__':
     test_all()
